@@ -12,9 +12,9 @@ export const usersTable = pgTable("users", {
 });
 
 export const student = pgTable("student", {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    id: integer().unique().generatedAlwaysAsIdentity(),
     name: varchar({ length: 255 }).notNull(),
-    roll_no: varchar({ length: 20 }).notNull().unique(),
+    roll_no: varchar({ length: 20 }).primaryKey().notNull(),
     email: varchar({ length: 255 }).notNull().unique(),
     phone: varchar({ length: 15 }).notNull().unique(),
     address: varchar({ length: 255 }).notNull(),
@@ -26,7 +26,7 @@ export const student = pgTable("student", {
 
 export const MarksTable = pgTable("marks", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    student_id: integer().notNull().references(() => student.id, { onDelete: "cascade" }),
+    student_id: varchar({ length: 20 }).notNull().references(() => student.roll_no, { onDelete: "cascade" }),
     osd: integer().notNull(),
     dsa: integer().notNull(),
     python: integer().notNull(),

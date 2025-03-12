@@ -81,8 +81,18 @@ export default function StudentDetail({ student, marks }: StudentDetailProps) {
   if (!student) return <p>Student not found.</p>
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUpdatedData({ ...updatedData, [e.target.id]: e.target.value })
-  }
+    const { id, value } = e.target;
+    const numericValue = Number(value);
+  
+    if (["osd", "dsa", "python", "pd", "ose", "dba"].includes(id)) {
+      if (numericValue < 0 || numericValue > 100) {
+        window.alert("Marks should be between 0 and 100!");
+        return; 
+      }
+    }
+  
+    setUpdatedData({ ...updatedData, [id]: value });
+  };
 
   const handleSave = async () => {
     console.log(updatedData)
