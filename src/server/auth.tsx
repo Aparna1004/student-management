@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/db/index";
-import { student, usersTable } from "@/db/schema";
+import { student, usersTable,MarksTable } from "@/db/schema";
 import { count, eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache"
@@ -98,5 +98,74 @@ export async function addStudent(
   } catch (error: any) {
     console.error("❌ Error adding student:", error);
     throw new Error(`Failed to add student: ${error.message}`);
+  }
+}
+
+export async function editStudent(
+  id: number,
+  name: string,
+  email: string,
+  phone: string,
+  address: string,
+  dob: string,
+  sem: number,
+  branch: string,
+  mentor: string,
+  marks: {
+    osd: number;
+    dsa: number;
+    python: number;
+    pd: number;
+    ose: number;
+    dba: number;
+  }
+) {
+  try {
+    console.log("🟡 Editing Student:", { id, name, email, phone, address, dob, sem, branch, mentor, marks });
+
+    // Calculate total marks, percentage, and grade
+    const total = marks.osd + marks.dsa + marks.python + marks.pd + marks.ose + marks.dba;
+    const percentage = (total / 600) * 100; // Assuming each subject is out of 100
+
+    // Grade Calculation
+    let grade = "F";
+    if (percentage >= 90) grade = "A+";
+    else if (percentage >= 80) grade = "A";
+    else if (percentage >= 70) grade = "B";
+    else if (percentage >= 60) grade = "C";
+    else if (percentage >= 50) grade = "D";
+    else grade = "F";
+
+    await db.transaction(async (tx) => {
+      // Update student details (excluding roll_no)
+      const updatedStudent = await tx
+        .update(student)
+        .set({ name, email, phone, address, dob, sem, branch, mentor })
+        .where(eq(student.id, id))
+        .returning();
+
+      // Update marks table
+      await tx
+        .update(MarksTable)
+        .set({
+          osd: marks.osd,
+          dsa: marks.dsa,
+          python: marks.python,
+          pd: marks.pd,
+          ose: marks.ose,
+          dba: marks.dba,
+          total,
+          percentage,
+          grade,
+        })
+        .where(eq(MarksTable.student_id, id));
+
+      console.log("✅ Updated Student:", updatedStudent);
+    });
+
+    revalidatePath(`/students/${id}`);
+  } catch (error: any) {
+    console.error("❌ Error editing student:", error);
+    throw new Error(`Failed to edit student: ${error.message}`);
   }
 }
