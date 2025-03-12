@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
   const studentId = Number(params.id);
 
-  const studentRecord = await db.select().from(student).where(eq(student.id, studentId));
+  const studentRecord = await db.select().from(student).where(eq(student.roll_no, studentId));
   const marksRecord = await db.select().from(MarksTable).where(eq(MarksTable.student_id, studentId));
 
   const studentData = studentRecord.length > 0 ? studentRecord[0] : null;

@@ -42,11 +42,11 @@ export default function StudentsTable({ initialStudents }: StudentsTableProps) {
     address: "",
     dob: "",
     sem: 1,
-    branch: "",
+    branch: "MCA",
     mentor: "",
   })
 
-  const itemsPerPage = 5
+  const itemsPerPage = 10
 
   const filteredStudents = useMemo(() => {
     let result = [...students]
@@ -133,7 +133,7 @@ export default function StudentsTable({ initialStudents }: StudentsTableProps) {
         address: "",
         dob: "",
         sem: 1,
-        branch: "",
+        branch: "MCA",
         mentor: "",
       });
     } catch (error) {
@@ -177,7 +177,7 @@ export default function StudentsTable({ initialStudents }: StudentsTableProps) {
                 <Input name="dob" type="date" value={newStudent.dob} onChange={handleInputChange} required />
                 <div className="grid grid-cols-2 gap-4">
                   <Input name="sem" type="number" placeholder="Semester" value={newStudent.sem} onChange={handleInputChange} required />
-                  <Input name="branch" placeholder="Branch" value={newStudent.branch} onChange={handleInputChange} required />
+                  {/* <Input name="branch" placeholder="Branch" value={newStudent.branch} onChange={handleInputChange} required /> */}
                 </div>
                 <Input name="mentor" placeholder="Mentor Username" value={newStudent.mentor} onChange={handleInputChange} required />
                 <div className="flex justify-end space-x-2">
@@ -204,7 +204,7 @@ export default function StudentsTable({ initialStudents }: StudentsTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            {["roll_no", "name", "email", "phone", "address", "dob", "sem", "branch", "mentor"].map((field) => (
+            {["roll_no", "name", "email", "phone", "address", "dob", "sem", "mentor"].map((field) => (
               <TableHead key={field} className="cursor-pointer" onClick={() => handleSort(field as keyof Student)}>
                 <div className="flex items-center gap-1">
                   {field.toUpperCase()}
@@ -218,13 +218,13 @@ export default function StudentsTable({ initialStudents }: StudentsTableProps) {
           {paginatedStudents.map(student => (
             <TableRow key={student.id}>
               <TableCell>{student.roll_no}</TableCell>
-              <TableCell><Link href={`/students/${student.id}`} className="hover:underline text-primary">{student.name}</Link></TableCell>
+              <TableCell><Link href={`/students/${student.roll_no}`} className="hover:underline text-primary">{student.name}</Link></TableCell>
               <TableCell>{student.email}</TableCell>
               <TableCell>{student.phone}</TableCell>
               <TableCell>{student.address}</TableCell>
               <TableCell>{student.dob}</TableCell>
               <TableCell>{student.sem}</TableCell>
-              <TableCell>{student.branch}</TableCell>
+              {/* <TableCell>{student.branch}</TableCell> */}
               <TableCell>{student.mentor}</TableCell>
             </TableRow>
           ))}
