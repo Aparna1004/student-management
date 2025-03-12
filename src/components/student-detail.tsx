@@ -228,7 +228,7 @@ export default function StudentDetail({ student, marks }: StudentDetailProps) {
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDelete}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 text-white"
+                  className="bg-destructive hover:bg-destructive/90 text-white"
                 >
                   Delete
                 </AlertDialogAction>
